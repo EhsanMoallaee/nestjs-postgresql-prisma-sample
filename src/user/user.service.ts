@@ -34,12 +34,12 @@ export class UserService {
                 userId: user.id
             },
             create: {
-                imageName: image.originalname,
+                imageName: image.filename,
                 url: image.path,
                 userId: user.id
             },
             update: {
-                imageName: image.originalname,
+                imageName: image.filename,
                 url: image.path,
             },
             select: {
