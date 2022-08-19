@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
+import { CustomGlobalLoggerModule } from './custom-global-logger/custom-global-logger.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { UserModule } from './user/user.module';
     }),
     AuthModule,
     UserModule,
-    PrismaModule
+    PrismaModule,
+    CustomGlobalLoggerModule
   ],
   controllers: [],
   providers: [],

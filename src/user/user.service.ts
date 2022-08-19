@@ -1,16 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '@prisma/client';
 
+import { CustomGlobalLoggerService } from './../custom-global-logger/custom-global-logger.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UserService {
     constructor(
         private prisma: PrismaService,
+        private loggerService: CustomGlobalLoggerService
     ){}
 
     async getMe(user: User) {
-        const selectedUser = this.prisma.user.findUnique({
+        this.loggerService.log({year: 2022});
+
+        const selectedUser = await this.prisma.user.findUnique({
             where: {
                 id: user.id
             },
@@ -29,7 +33,7 @@ export class UserService {
         return selectedUser;
     }
     async uploadProfileImage(image, user) {
-        const profileImage = this.prisma.profileImage.upsert({
+        const profileImage = await this.prisma.profileImage.upsert({
             where: {
                 userId: user.id
             },
@@ -49,11 +53,27 @@ export class UserService {
         return profileImage;
     }
 
+    async getUserById(userId: number) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId
+            },
+            select: {
+                fullname: true,
+                email: true,
+                balance: true,
+                profileImage: true
+            }
+        });
+        if(!user) throw new NotFoundException();
+        return user;
+    }
+
     async getAllMedia() {
-        return this.prisma.profileImage.findMany();
+        return await this.prisma.profileImage.findMany();
     }
 
     async getAllUser() {
-        return this.prisma.user.findMany();
+        return await this.prisma.user.findMany();
     }
 }

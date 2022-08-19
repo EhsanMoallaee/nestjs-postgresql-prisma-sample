@@ -1,5 +1,5 @@
 import { createReadStream } from 'fs';
-import { Controller, Get, Param, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors, StreamableFile } from '@nestjs/common';
+import { Controller, Get, Param, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors, StreamableFile, ParseIntPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
 
@@ -34,12 +34,17 @@ export class UserController {
         // return new StreamableFile(file);
     }
 
+    @Get('user/:userId')
+    getUserById(@Param('userId', ParseIntPipe) userId: number) {
+        return this.userService.getUserById(userId)
+    }
+
     @Get('medias') // for own test
     getAllMedia() {
         return this.userService.getAllMedia()
     }
 
-    @Get() // for own test
+    @Get('allusers') // for own test
     getAllUser() {
         return this.userService.getAllUser()
     }
